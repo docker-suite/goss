@@ -1,0 +1,46 @@
+# Check files and folders existence
+file:
+  /goss:
+    exists: true
+    mode: "0755"
+    owner: root
+    group: root
+    filetype: directory
+  /usr/local/bin/goss:
+    exists: true
+    mode: "0755"
+    owner: root
+    group: root
+    filetype: file
+  /usr/local/bin/dgoss:
+    exists: true
+    mode: "0755"
+    owner: root
+    group: root
+    filetype: file
+    contains:
+      - 'USAGE: $(basename "$0") [run|edit] <docker_run_params>'
+  /usr/local/bin/dcgoss:
+    exists: true
+    mode: "0755"
+    owner: root
+    group: root
+    filetype: file
+    contains:
+      - 'USAGE: $(basename "$0") [run|edit] <docker-compose-service>'
+  /usr/local/bin/docker:
+    exists: true
+    mode: "0755"
+    filetype: file
+
+# Check commands
+command:
+  docker-version:
+    exec: "docker --version" 
+    exit-status: 0
+  docker-compose-version:
+    exec: "docker-compose --version" 
+    exit-status: 0
+  goss-version:
+    exec: "goss --version" 
+    exit-status: 0
