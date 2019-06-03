@@ -2,7 +2,7 @@
 file:
   /goss:
     exists: true
-    mode: "0755"
+    mode: "0777"
     owner: root
     group: root
     filetype: directory

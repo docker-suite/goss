@@ -2,7 +2,6 @@ FROM docker:stable
 
 ENV GOSS_VERSION "0.3.7"
 ENV GOSS_COMMIT "ed797be"
-ENV GOSS_FILES_STRATEGY=cp
 
 LABEL \
   com.github.docker-suite.goss.authors="Hexosse <hexosse@gmail.com>" \
@@ -13,6 +12,9 @@ LABEL \
   com.github.docker-suite.goss.version="${GOSS_VERSION}-${GOSS_COMMIT}"
 
 ENV PATH=/goss:$PATH
+
+# Modified version of dgoss
+ADD dgoss /usr/local/bin/dgoss
 
 RUN \
     # Print executed commands
@@ -31,7 +33,6 @@ RUN \
     && curl -L -o /usr/local/bin/goss https://github.com/aelsabbahy/goss/releases/download/v${GOSS_VERSION}/goss-linux-amd64 \
     && chmod +x /usr/local/bin/goss \
     # Install dgoss
-    && curl -L -o /usr/local/bin/dgoss https://raw.githubusercontent.com/aelsabbahy/goss/${GOSS_COMMIT}/extras/dgoss/dgoss \
     && chmod +x /usr/local/bin/dgoss \
     # Install dcgoss
     && curl -L -o /usr/local/bin/dcgoss https://raw.githubusercontent.com/aelsabbahy/goss/${GOSS_COMMIT}/extras/dcgoss/dcgoss \
@@ -39,7 +40,7 @@ RUN \
     # Clear cache
     && apk del --no-cache .build-dependencies \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
-    
+
 VOLUME /goss
 
 WORKDIR /goss
