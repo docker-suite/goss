@@ -1,4 +1,5 @@
 DOCKER_IMAGE=dsuite/goss
+DIR:=$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 all: build test
 
@@ -24,7 +25,7 @@ test-0.3.7:
 	docker run --rm -t \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
-		-v ${PWD}/goss.yaml:/goss/goss.yaml:ro \
+		-v $(DIR)/goss.yaml:/goss/goss.yaml:ro \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
@@ -35,8 +36,19 @@ shell-0.3.7:
 	docker run --rm -it \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
-		-v ${PWD}/goss.yaml:/goss/goss.yaml:ro \
+		-v $(DIR)/goss.yaml:/goss/goss.yaml:ro \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
 		bash
+
+readme:
+	@docker run -t --rm \
+		-e http_proxy=${http_proxy} \
+		-e https_proxy=${https_proxy} \
+		-e DEBUG_LEVEL=DEBUG \
+		-e DOCKER_USERNAME=${DOCKER_USERNAME} \
+		-e DOCKER_PASSWORD=${DOCKER_PASSWORD} \
+		-e DOCKER_IMAGE=${DOCKER_IMAGE} \
+		-v $(DIR):/data \
+		dsuite/hub-updater
