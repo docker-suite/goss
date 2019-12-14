@@ -1,39 +1,52 @@
+## Name of the image
 DOCKER_IMAGE=dsuite/goss
+
+## Current directory
 DIR:=$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
-all: build test
+## Define the latest version
+latest = 0.3.8
 
-# Build Docker image
-build: build-0.3.7
+##
+.DEFAULT_GOAL := build
+.PHONY: *
 
-# Test Docker image
-test: test-0.3.7
+help:
+	@printf "\033[33mUsage:\033[0m\n  make [target]\n\n\033[33mTargets:\033[0m\n"
+	@grep -E '^[-a-zA-Z0-9_\.\/]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[32m%-15s\033[0m %s\n", $$1, $$2}'
 
-build-0.3.7:
-	# Build dsuite/goss:0.3.7
-	docker build \
+
+all: ## Build and test
+	@$(MAKE) build
+	@$(MAKE) test
+
+build: ## Build Docker image
+	@docker build \
 		--build-arg http_proxy=${http_proxy} \
 		--build-arg https_proxy=${https_proxy} \
-		--file Dockerfile-0.3.7 \
-		--tag $(DOCKER_IMAGE):0.3.7 \
+		--file Dockerfile \
+		--tag $(DOCKER_IMAGE):$(latest) \
 		.
-	# Set dsuite/goss:0.3.7 as lastest
-	docker tag $(DOCKER_IMAGE):0.3.7 $(DOCKER_IMAGE):latest
+	@docker tag $(DOCKER_IMAGE):$(latest) $(DOCKER_IMAGE):latest
 
-test-0.3.7:
+test: ## Test Docker image
 	# Test image
-	docker run --rm -t \
+	@docker run --rm -t \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-v $(DIR)/goss.yaml:/goss/goss.yaml:ro \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
-		dgoss run $(DOCKER_IMAGE):0.3.7 tail -f /dev/null
+		dgoss run $(DOCKER_IMAGE):$(latest) tail -f /dev/null
 
-shell-0.3.7:
-	# Test image
-	docker run --rm -it \
+push:
+	@$(MAKE) build
+	@docker push $(DOCKER_IMAGE):$(latest)
+	@docker push $(DOCKER_IMAGE):latest
+
+shell:
+	@docker run --rm -it \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-v $(DIR)/goss.yaml:/goss/goss.yaml:ro \

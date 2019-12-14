@@ -14,7 +14,7 @@ file:
     filetype: file
   /usr/local/bin/dgoss:
     exists: true
-    mode: "0755"
+    mode: "0777"
     owner: root
     group: root
     filetype: file
