@@ -1,7 +1,7 @@
 FROM docker:stable
 
-ENV GOSS_VERSION "0.3.8"
-ENV GOSS_COMMIT "777ae41"
+ENV GOSS_VERSION "0.3.12"
+ENV GOSS_COMMIT "b30949e"
 
 LABEL \
   com.github.docker-suite.goss.authors="Hexosse <hexosse@gmail.com>" \
@@ -26,7 +26,7 @@ RUN \
     # Add build dependencies
     && apk add --no-cache py-pip \
     # Add build dependencies
-    && apk add --no-cache curl python-dev libffi-dev openssl-dev gcc libc-dev make --virtual .build-dependencies \
+    && apk add --no-cache curl python3-dev libffi-dev openssl-dev gcc libc-dev make --virtual .build-dependencies \
     # Install docker-compose
     && pip install docker-compose \
     # Install goss
