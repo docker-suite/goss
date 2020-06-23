@@ -5,7 +5,7 @@ DOCKER_IMAGE=dsuite/goss
 DIR:=$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 ## Define the latest version
-latest = 0.3.12
+latest = 0.3.13
 
 ##
 .DEFAULT_GOAL := build

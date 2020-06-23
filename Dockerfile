@@ -1,7 +1,7 @@
 FROM docker:stable
 
-ENV GOSS_VERSION "0.3.12"
-ENV GOSS_COMMIT "b30949e"
+ENV GOSS_VERSION "0.3.13"
+ENV GOSS_COMMIT "d1e9f59"
 
 LABEL \
   com.github.docker-suite.goss.authors="Hexosse <hexosse@gmail.com>" \
