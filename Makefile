@@ -24,6 +24,7 @@ build: ## Build Docker image
 	@docker build \
 		--build-arg http_proxy=${http_proxy} \
 		--build-arg https_proxy=${https_proxy} \
+		--build-arg no_proxy=${no_proxy} \
 		--file Dockerfile \
 		--tag $(DOCKER_IMAGE):$(latest) \
 		.
@@ -34,6 +35,7 @@ test: ## Test Docker image
 	@docker run --rm -t \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
+		-e no_proxy=${no_proxy} \
 		-v $(DIR)/goss.yaml:/goss/goss.yaml:ro \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
@@ -49,6 +51,7 @@ shell:
 	@docker run --rm -it \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
+		-e no_proxy=${no_proxy} \
 		-v $(DIR)/goss.yaml:/goss/goss.yaml:ro \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
@@ -59,6 +62,7 @@ readme:
 	@docker run -t --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
+		-e no_proxy=${no_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
 		-e DOCKER_USERNAME=${DOCKER_USERNAME} \
 		-e DOCKER_PASSWORD=${DOCKER_PASSWORD} \
