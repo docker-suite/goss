@@ -1,7 +1,9 @@
-FROM docker:stable
+FROM docker/compose:alpine-1.27.4 as compose
 
-ENV GOSS_VERSION "0.3.13"
-ENV GOSS_COMMIT "d1e9f59"
+FROM docker:stable as goss
+
+ENV GOSS_VERSION "0.3.16"
+ENV GOSS_COMMIT "6e5d3e3"
 
 LABEL \
   com.github.docker-suite.goss.authors="Hexosse <hexosse@gmail.com>" \
@@ -13,22 +15,24 @@ LABEL \
 
 ENV PATH=/goss:$PATH
 
+
+## Install docker-compose
+COPY --from=compose /usr/local/bin/docker-compose /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
+
+
 # Modified version of dgoss
 ADD dgoss /usr/local/bin/dgoss
 
+
+## Install packages
 RUN \
     # Print executed commands
     set -x \
     # Update repository indexes
-    apk upgrade --update-cache \
+    && apk update \
     # Add bash
-    && apk add --no-cache bash \
-    # Add build dependencies
-    && apk add --no-cache py-pip \
-    # Add build dependencies
-    && apk add --no-cache curl python3-dev libffi-dev openssl-dev gcc libc-dev make --virtual .build-dependencies \
-    # Install docker-compose
-    && pip install docker-compose \
+    && apk add --no-cache bash curl \
     # Install goss
     && curl -L -o /usr/local/bin/goss https://github.com/aelsabbahy/goss/releases/download/v${GOSS_VERSION}/goss-linux-amd64 \
     && chmod +x /usr/local/bin/goss \
@@ -38,7 +42,6 @@ RUN \
     && curl -L -o /usr/local/bin/dcgoss https://raw.githubusercontent.com/aelsabbahy/goss/${GOSS_COMMIT}/extras/dcgoss/dcgoss \
     && chmod +x /usr/local/bin/dcgoss \
     # Clear cache
-    && apk del --no-cache .build-dependencies \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 VOLUME /goss

@@ -14,7 +14,7 @@ file:
     filetype: file
   /usr/local/bin/dgoss:
     exists: true
-    mode: "0777"
+    mode: "0755"
     owner: root
     group: root
     filetype: file
@@ -29,6 +29,10 @@ file:
     contains:
       - 'USAGE: $(basename "$0") [run|edit] <docker-compose-service>'
   /usr/local/bin/docker:
+    exists: true
+    mode: "0755"
+    filetype: file
+  /usr/local/bin/docker-compose:
     exists: true
     mode: "0755"
     filetype: file

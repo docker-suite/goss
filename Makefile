@@ -5,7 +5,7 @@ DOCKER_IMAGE=dsuite/goss
 DIR:=$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 ## Define the latest version
-latest = 0.3.13
+latest = 0.3.16
 
 ##
 .DEFAULT_GOAL := build
@@ -22,9 +22,6 @@ all: ## Build and test
 
 build: ## Build Docker image
 	@docker build \
-		--build-arg http_proxy=${http_proxy} \
-		--build-arg https_proxy=${https_proxy} \
-		--build-arg no_proxy=${no_proxy} \
 		--file Dockerfile \
 		--tag $(DOCKER_IMAGE):$(latest) \
 		.
@@ -33,9 +30,6 @@ build: ## Build Docker image
 test: ## Test Docker image
 	# Test image
 	@docker run --rm -t \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-v $(DIR)/goss.yaml:/goss/goss.yaml:ro \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
@@ -49,9 +43,6 @@ push:
 
 shell:
 	@docker run --rm -it \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-v $(DIR)/goss.yaml:/goss/goss.yaml:ro \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
@@ -60,9 +51,6 @@ shell:
 
 readme:
 	@docker run -t --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
 		-e DOCKER_USERNAME=${DOCKER_USERNAME} \
 		-e DOCKER_PASSWORD=${DOCKER_PASSWORD} \
